@@ -1,37 +1,25 @@
 use async_std::task;
+use surf;
 
-// creating an async function wich takes 5 sec to respond
-async fn negate(n: i32) -> i32 {
-    println!("negating {}", n);
-    task::sleep(std::time::Duration::from_secs(5)).await;
-    println!("finished waiting for {}", n);
-    n * -1
+async fn fetch(url: &str) -> Result<String, surf::Exception> {
+    surf::get(url).recv_string().await
 }
 
-// calling the async function using std::task executor
-async fn f() -> i32 {
-    let neg = negate(5);
-// This function is similar to [std::thread::spawn], 
-// except it spawns an asynchronous task.
-    let async_neg = task::spawn(negate(3));
+async fn execute() {
 
-    task::sleep(std::time::Duration::from_secs(1)).await;
+    let city_name = "Karachi";
+    let api_key = "3770c89821b6000981072f41e3ec419f"
+    let mut api = format!("api.openweathermap.org/data/2.5/weather?q={}&appid={",
+        city_name ,api_key})
 
-    neg.await + async_neg.await
+    println!("{}"j, api);
 
+    // match fetch("").await {
+    //     Ok(s) =>
+    //     Err(e) =>
+    // }
 }
 
 fn main() {
-    println!("{}",task::block_on(f()));
-    let res = task::spawn(async {
-        task::sleep(std::time::Duration::from_secs(5)).await;
-        println!("Hello from main 1")
-    });
-// as soon as res2 is finished it will close the current thread
-// so we need to block the thread aysnchronuosly until we get response from res variable
-    let _res2 = task::spawn(async {
-        println!("Hello from main 2")
-    });
-
-    task::block_on(res);
+    task::block_on(execute());
 }
