@@ -29,8 +29,9 @@ async fn execute() {
     match fetch(&api).await {
         Ok(s) => {
             // serde_json::Value::String(serde_json::to_string(s.as_str()).unwrap())
-            // let rjson: Value = serde_json::Value::String(serde_json::to_string(&s).unwrap()); 
-
+            // let rjson: Value = serde_json::Value::String(serde_json::to_string(&s).unwrap());
+            
+            // s is a string we need to convert that into a JSON object
             let json_str: Value = serde_json::from_str(s.as_str()).unwrap();
             if json_str["cod"] == 200 {
                 println!("Weather now in {}\nDetails: {}",json_str["name"],json_str["weather"][0] );
